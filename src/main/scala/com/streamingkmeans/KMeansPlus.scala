@@ -16,7 +16,7 @@ class KMeansPlus (
                var maxIterations: Int,
                var centroids:DataSet[DenseVector]
                ) extends Serializable {
-  def train( points: DataSet[DenseVector]): Unit ={
+  def train( points: DataSet[DenseVector]): DataSet[DenseVector] ={
     val finalCentroids:DataSet[DenseVector] = centroids.iterate(maxIterations) { currentCentroids =>
       val newCentroids = points
           .map(new SelectNearestCenter).withBroadcastSet(currentCentroids, "centroids")
@@ -35,7 +35,7 @@ class KMeansPlus (
       newCentroids
     }
     centroids = finalCentroids
-    finalCentroids.print()
+    finalCentroids
 
     //法2 使用while进行迭代
 //    var iteration = 0
