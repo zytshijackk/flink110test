@@ -22,18 +22,24 @@ object KMeansPlusTest {
 
     val text = env.readTextFile(input)
     val center = env.readTextFile(centerInput)
+      System.out.println("center:")
+      center.print()
     val data:DataSet[DenseVector] = text.map(new StringToDense)
+      System.out.println("data:")
+      data.print()
     val dataCenter:DataSet[DenseVector] = center.map(new StringToDense)
     val kMeansPlus = new KMeansPlus(2,dataCenter)
-    kMeansPlus.train(data)
+    val model: DataSet[DenseVector] = kMeansPlus.train(data)
+      System.out.println("model:")
+      model.print()
     val dataStream:DataStream[String] = envStream.readTextFile(input)
     val predictStream = dataStream.map(new StringToDense)
-    data.print()
+
     val arr1 = DenseVector(Array[Double](1,1))
     val arr2 = DenseVector(Array[Double](-1,-1))
     val arr = Array[DenseVector](arr1,arr2)
 
-    kMeansPlus.predict(predictStream,arr).print("!!")
+    kMeansPlus.predict(predictStream,arr).print("predict")
 //    env.execute()
     envStream.execute()
   }
