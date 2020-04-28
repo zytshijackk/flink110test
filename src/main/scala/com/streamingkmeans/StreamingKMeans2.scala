@@ -61,18 +61,18 @@ class StreamingKMeans2(
 //    val currentCentroids: DataSet[DenseVector] = env.fromCollection(clusterCenters)
 //    val currentWeights: DataSet[Double] = env.fromCollection(clusterWeights)
     val arr = Array.fill[Double](dim)(1.0)
-    val centers: Array[DenseVector] =  Array.fill[DenseVector](k)(DenseVector.apply(arr))
+    val currentCenters: Array[DenseVector] =  Array.fill[DenseVector](k)(DenseVector.apply(arr))
     var index = 0
     for (center <- clusterCenters) {
-      centers.update(index, center)
+      currentCenters.update(index, center)
       index += 1
     }
-    val weights = clusterWeights
+    val currentWeights = clusterWeights
 //    val decayDataset: DataSet[Double] = env.fromElements(decayFactor)
 //    windowPoints.print()
     val result: Seq[(Int, DenseVector, Int)] = windowPoints
-      .map(new TestCenter).withBroadcastSet(windowPoints.getExecutionEnvironment.fromCollection(centers), "centroids")//(closestCentroidId, p)
-      .withBroadcastSet(windowPoints.getExecutionEnvironment.fromCollection(weights),"weights")
+      .map(new TestCenter).withBroadcastSet(windowPoints.getExecutionEnvironment.fromCollection(currentCenters), "centroids")//(closestCentroidId, p)
+      .withBroadcastSet(windowPoints.getExecutionEnvironment.fromCollection(currentWeights),"weights")
 //      .withBroadcastSet(decayFactor,"")
       .withBroadcastSet(windowPoints.getExecutionEnvironment.fromElements(decayFactor),"decay")
       .groupBy(0)
@@ -99,14 +99,14 @@ class StreamingKMeans2(
     result.foreach{
       case (j,newCenter,weight)=>{
         System.out.println("index "+j+":")
-        centers.update(j,newCenter)
-        System.out.println("centers:"+centers(j))
-        weights.update(j,clusterWeights(j)+weight)
-        System.out.println("weights:"+weights(j))
+        currentCenters.update(j,newCenter)
+        System.out.println("centers:"+currentCenters(j))
+        currentWeights.update(j,clusterWeights(j)+weight)
+        System.out.println("weights:"+currentWeights(j))
       }
     }
-    this.clusterWeights = weights
-    this.clusterCenters = centers
+    this.clusterWeights = currentWeights
+    this.clusterCenters = currentCenters
     windowPoints.map{
       point => (EuclideanDistanceMeasure.findClosest(point,clusterCenters)._1,point)
     }
