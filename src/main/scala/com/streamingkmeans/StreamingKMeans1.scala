@@ -7,7 +7,7 @@ import org.apache.flink.streaming.api.scala.DataStream
 import org.apache.flink.streaming.api.windowing.windows.GlobalWindow
 import org.apache.flink.util.Collector
 
-class StreamingKMeans(
+class StreamingKMeans1(
                        var k:Int,
                        var dim:Int, // 点的维度
                        var decayFactor:Double,
