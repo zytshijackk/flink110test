@@ -20,6 +20,7 @@ class KMeansPlus (
     val finalCentroids:DataSet[DenseVector] = centroids.iterate(maxIterations) { currentCentroids =>
       val newCentroids = points
           .map(new SelectNearestCenter).withBroadcastSet(currentCentroids, "centroids")
+
         .map { x => (x._1, x._2, 1L) }
         .groupBy(0)
         .reduce { (p1, p2) => (p1._1,
@@ -44,7 +45,7 @@ class KMeansPlus (
 //      currentCentroids.print()
 //      currentCentroids = points
 //        .map(new SelectNearestCenter).withBroadcastSet(currentCentroids, "centroids")
-//        .map { x => (x._1, x._2, 1L) }
+    //        .map { x => (x._1, x._2, 1L) }
 //        .groupBy(0)
 //        .reduce { (p1, p2) => (p1._1,
 //          {
@@ -90,6 +91,7 @@ final class SelectNearestCenter extends RichMapFunction[DenseVector, (Int, Dense
 //        closestCentroidId = centroid.id
 //      }
 //    }
+    //返回的是（中心下表，点信息）
     for(i <- 0 to centroids.size-1){
       val arr = centroids.toArray
       val distance = EuclideanDistanceMeasure.distance(p,arr(i))
