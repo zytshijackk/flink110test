@@ -12,8 +12,7 @@ object KMeansPlusTest {
   def main(args: Array[String]): Unit = {
 //    val arr1 = DenseVector(Array[Double](1,1))
 //    val arr2 = DenseVector(Array[Double](-1,-1))
-//    val arr3 = DenseVector(Array[Double](0,0))
-//    val arr = Array[DenseVector](arr1,arr2,arr3)
+//    val arr = Array[DenseVector](arr1,arr2)
 //    val kmeansPlus = new KMeansPlus(3,10,arr)
     val input = "/Users/zytshijack/Documents/github/git/myrepositories/flink110test/src/main/resources/file/point.txt"
     val centerInput = "/Users/zytshijack/Documents/github/git/myrepositories/flink110test/src/main/resources/file/center.txt"
